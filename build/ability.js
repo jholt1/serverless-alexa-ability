@@ -117,33 +117,14 @@ var Ability = exports.Ability = function () {
     }
   }, {
     key: 'create',
-    value: function () {
-      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(end) {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                this.output.response.shouldEndSession = end;
-                _context2.next = 3;
-                return this.call(null, this.output);
+    value: function create(end) {
+      this.output.response.shouldEndSession = end;
+      this.output.sessionAttributes = attributes(this.ev);
 
-              case 3:
-                return _context2.abrupt('return', this);
+      this.call(null, this.output);
 
-              case 4:
-              case 'end':
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      function create(_x3) {
-        return _ref2.apply(this, arguments);
-      }
-
-      return create;
-    }()
+      return this;
+    }
   }, {
     key: 'end',
     value: function end() {
@@ -162,7 +143,6 @@ var Ability = exports.Ability = function () {
     key: 'send',
     value: function send(type, message) {
       this.output.response.outputSpeech = output(type, message);
-      this.output.sessionAttributes = attributes(this.ev);
 
       return this;
     }
@@ -184,14 +164,13 @@ var Ability = exports.Ability = function () {
     key: 'card',
     value: function card(obj) {
       this.output.response.card = obj;
+
       return this;
     }
   }, {
     key: 'linkAccount',
     value: function linkAccount() {
-      this.card({
-        type: 'LinkAccount'
-      });
+      this.card({ type: 'LinkAccount' });
 
       return this;
     }
@@ -201,6 +180,20 @@ var Ability = exports.Ability = function () {
       this.output.response.reprompt = {
         outputSpeech: output(type, message)
       };
+
+      return this;
+    }
+  }, {
+    key: 'repromptSay',
+    value: function repromptSay(message) {
+      this.reprompt('text', message);
+
+      return this;
+    }
+  }, {
+    key: 'repromptSsml',
+    value: function repromptSsml(message) {
+      this.reprompt('ssml', message);
 
       return this;
     }
