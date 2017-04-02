@@ -16,7 +16,8 @@
   "keywords": [
     "serverless",
     "lambda",
-    "alexa"
+    "alexa",
+    "echo"
   ],
   "author": "jholt1",
   "license": "ISC",
