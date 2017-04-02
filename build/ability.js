@@ -43,24 +43,6 @@ var intent = function intent(event) {
   return event;
 };
 
-var response = function response(type, message, end, event, card, reprompt) {
-  var outputSpeech = output(type, message);
-  var sessionAttributes = attributes(event);
-
-  var response = {
-    version: '1.0',
-    response: {
-      outputSpeech: outputSpeech,
-      shouldEndSession: end,
-      card: card,
-      reprompt: reprompt
-    },
-    sessionAttributes: sessionAttributes
-  };
-  console.log('response', response);
-  return response;
-};
-
 var Ability = exports.Ability = function () {
   function Ability(event, callback) {
     _classCallCheck(this, Ability);
@@ -68,8 +50,13 @@ var Ability = exports.Ability = function () {
     this.ev = intent(event);
     this.call = callback;
 
-    console.log('request', event.request);
-    console.log('event', event);
+    this.output = {
+      version: '1.0',
+      response: {}
+    };
+
+    // console.log('request', event.request);
+    // console.log('event', event);
   }
 
   _createClass(Ability, [{
@@ -115,6 +102,8 @@ var Ability = exports.Ability = function () {
       keys.forEach(function (key) {
         _this.ev.session.attributes[key] = obj[key];
       });
+
+      return this;
     }
   }, {
     key: 'event',
@@ -127,24 +116,21 @@ var Ability = exports.Ability = function () {
       return this.call.apply(this, arguments);
     }
   }, {
-    key: 'send',
+    key: 'create',
     value: function () {
-      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
-        for (var _len = arguments.length, argument = Array(_len), _key = 0; _key < _len; _key++) {
-          argument[_key] = arguments[_key];
-        }
-
+      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(end) {
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return this.call(null, response.apply(undefined, argument.concat([this.ev, this.c, this.re])));
-
-              case 2:
-                return _context2.abrupt('return', _context2.sent);
+                this.output.response.shouldEndSession = end;
+                _context2.next = 3;
+                return this.call(null, this.output);
 
               case 3:
+                return _context2.abrupt('return', this);
+
+              case 4:
               case 'end':
                 return _context2.stop();
             }
@@ -152,34 +138,53 @@ var Ability = exports.Ability = function () {
         }, _callee2, this);
       }));
 
-      function send() {
+      function create(_x3) {
         return _ref2.apply(this, arguments);
       }
 
-      return send;
+      return create;
     }()
   }, {
-    key: 'say',
-    value: function say() {
-      for (var _len2 = arguments.length, argument = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        argument[_key2] = arguments[_key2];
-      }
+    key: 'end',
+    value: function end() {
+      this.create(true);
 
-      return this.send.apply(this, ['text'].concat(argument));
+      return this;
+    }
+  }, {
+    key: 'converse',
+    value: function converse() {
+      this.create(false);
+
+      return this;
+    }
+  }, {
+    key: 'send',
+    value: function send(type, message) {
+      this.output.response.outputSpeech = output(type, message);
+      this.output.sessionAttributes = attributes(this.ev);
+
+      return this;
+    }
+  }, {
+    key: 'say',
+    value: function say(message) {
+      this.send('text', message);
+
+      return this;
     }
   }, {
     key: 'ssml',
-    value: function ssml() {
-      for (var _len3 = arguments.length, argument = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        argument[_key3] = arguments[_key3];
-      }
+    value: function ssml(message) {
+      this.send('ssml', message);
 
-      return this.send.apply(this, ['ssml'].concat(argument));
+      return this;
     }
   }, {
     key: 'card',
     value: function card(obj) {
-      this.c = obj;
+      this.output.response.card = obj;
+      return this;
     }
   }, {
     key: 'linkAccount',
@@ -187,13 +192,17 @@ var Ability = exports.Ability = function () {
       this.card({
         type: 'LinkAccount'
       });
+
+      return this;
     }
   }, {
     key: 'reprompt',
     value: function reprompt(type, message) {
-      this.re = {
+      this.output.response.reprompt = {
         outputSpeech: output(type, message)
       };
+
+      return this;
     }
   }, {
     key: 'error',

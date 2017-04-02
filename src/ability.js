@@ -30,32 +30,19 @@ const intent = (event) => {
   return event;
 };
 
-const response = (type, message, end, event, card, reprompt) => {
-  const outputSpeech = output(type, message);
-  const sessionAttributes = attributes(event);
-
-  let response = {
-    version: '1.0',
-    response: {
-      outputSpeech,
-      shouldEndSession: end,
-      card,
-      reprompt
-    },
-    sessionAttributes
-  };
-  console.log('response', response);
-  return response;
-};
-
 export class Ability {
 
   constructor(event, callback) {
     this.ev = intent(event);
     this.call = callback;
 
-    console.log('request', event.request);
-    console.log('event', event);
+    this.output = {
+      version: '1.0',
+      response: {}
+    };
+
+    // console.log('request', event.request);
+    // console.log('event', event);
   }
 
   async on(intent, func) {
@@ -72,6 +59,8 @@ export class Ability {
     keys.forEach((key) => {
       this.ev.session.attributes[key] = obj[key];
     });
+
+    return this;
   }
 
   event() {
@@ -82,32 +71,75 @@ export class Ability {
     return this.call(...argument);
   }
 
-  async send(...argument) {
-    return await this.call(null, response(...argument, this.ev, this.c, this.re));
+  create(end) {
+    this.output.response.shouldEndSession = end;
+    this.output.sessionAttributes = attributes(this.ev);
+
+    this.call(null, this.output);
+
+    return this;
   }
 
-  say(...argument) {
-    return this.send('text', ...argument);
+  end() {
+    this.create(true);
+
+    return this;
   }
 
-  ssml(...argument) {
-    return this.send('ssml', ...argument);
+  converse() {
+    this.create(false);
+
+    return this;
+  }
+
+  send(type, message) {
+    this.output.response.outputSpeech = output(type, message);
+
+    return this;
+  }
+
+  say(message) {
+    this.send('text', message);
+
+    return this;
+  }
+
+  ssml(message) {
+    this.send('ssml', message);
+
+    return this;
   }
 
   card(obj) {
-    this.c = obj;
+    this.output.response.card = obj;
+
+    return this;
   }
 
   linkAccount() {
-    this.card({
-      type: 'LinkAccount'
-    })
+    this.card({type: 'LinkAccount'});
+
+    return this;
   }
 
   reprompt(type, message) {
-    this.re = {
+    this.output.response.reprompt = {
       outputSpeech: output(type, message)
     }
+
+    return this;
+  }
+
+  repromptSay(message) {
+    this.reprompt('text', message);
+
+    return this;
+  }
+
+  repromptSsml(message) {
+    this.reprompt('ssml', message);
+
+    return this;
   }
 
   error(func) {
