@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Ability = undefined;
 
 var _ability = require('./ability');
 
@@ -13,5 +12,3 @@ Object.defineProperty(exports, 'Ability', {
     return _ability.Ability;
   }
 });
-
-require('babel-polyfill');
