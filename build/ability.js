@@ -11,6 +11,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _lodash = require('lodash');
 
+var _universalAnalytics = require('universal-analytics');
+
+var _universalAnalytics2 = _interopRequireDefault(_universalAnalytics);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -44,11 +50,15 @@ var intent = function intent(event) {
 };
 
 var Ability = exports.Ability = function () {
-  function Ability(event, callback) {
+  function Ability(event, callback, options) {
     _classCallCheck(this, Ability);
 
     this.ev = intent(event);
     this.call = callback;
+
+    if (options && options.ga) {
+      this.visitor = (0, _universalAnalytics2.default)(options.ga);
+    }
 
     this.output = {
       version: '1.0',
@@ -60,6 +70,15 @@ var Ability = exports.Ability = function () {
   }
 
   _createClass(Ability, [{
+    key: 'insights',
+    value: function insights(type, data) {
+      if (this.visitor) {
+        this.visitor[type](data).send();
+      }
+
+      return this;
+    }
+  }, {
     key: 'on',
     value: function () {
       var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(intent, func) {
@@ -68,17 +87,19 @@ var Ability = exports.Ability = function () {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!(intent === this.ev.handler)) {
-                  _context.next = 3;
+                  _context.next = 4;
                   break;
                 }
 
-                _context.next = 3;
+                this.insights('pageview', intent);
+
+                _context.next = 4;
                 return func(this);
 
-              case 3:
+              case 4:
                 return _context.abrupt('return', this);
 
-              case 4:
+              case 5:
               case 'end':
                 return _context.stop();
             }
@@ -150,6 +171,10 @@ var Ability = exports.Ability = function () {
     key: 'say',
     value: function say(message) {
       this.send('text', message);
+      this.insights('event', {
+        ec: 'say',
+        ea: message
+      });
 
       return this;
     }
