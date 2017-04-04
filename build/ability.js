@@ -58,6 +58,7 @@ var Ability = exports.Ability = function () {
 
     if (options && options.ga) {
       this.visitor = (0, _universalAnalytics2.default)(options.ga);
+      this.visitor.set('uid', this.ev.session.user.userId);
     }
 
     this.output = {

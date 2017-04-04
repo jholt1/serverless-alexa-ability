@@ -39,6 +39,7 @@ export class Ability {
 
     if(options && options.ga) {
       this.visitor = ua(options.ga);
+      this.visitor.set('uid', this.ev.session.user.userId);
     }
 
     this.output = {
