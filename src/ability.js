@@ -1,4 +1,5 @@
 import { get, clone } from 'lodash';
+import ua from 'universal-analytics';
 
 const output = (type, message) => {
   let obj = {};
@@ -32,9 +33,13 @@ const intent = (event) => {
 
 export class Ability {
 
-  constructor(event, callback) {
+  constructor(event, callback, options) {
     this.ev = intent(event);
     this.call = callback;
+
+    if(options.ga) {
+      this.visitor = ua(options.ga);
+    }
 
     this.output = {
       version: '1.0',
@@ -45,8 +50,18 @@ export class Ability {
     // console.log('event', event);
   }
 
+  insights(type, data) {
+    if (this.visitor) {
+      this.visitor[type](data).send();
+    }
+
+    return this;
+  }
+
   async on(intent, func) {
     if (intent === this.ev.handler) {
+      this.insights('pageview', intent);
+
       await func(this);
     }
 
@@ -100,6 +115,10 @@ export class Ability {
 
   say(message) {
     this.send('text', message);
+    this.insights('event', {
+      ec: 'say',
+      ea: message
+    });
 
     return this;
   }

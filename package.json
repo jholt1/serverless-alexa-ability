@@ -26,7 +26,8 @@
   },
   "homepage": "https://github.com/jholt1/serverless-alexa-ability#readme",
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "universal-analytics": "^0.4.13"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
