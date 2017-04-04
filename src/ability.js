@@ -37,7 +37,7 @@ export class Ability {
     this.ev = intent(event);
     this.call = callback;
 
-    if(options.ga) {
+    if(options && options.ga) {
       this.visitor = ua(options.ga);
     }
 
