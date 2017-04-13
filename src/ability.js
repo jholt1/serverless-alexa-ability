@@ -21,9 +21,15 @@ const attributes = (event) => {
 };
 
 const intent = (event) => {
-  let handler = typeof event.session.attributes.__intents__ === 'object' ?
-    `${event.session.attributes.__intents__.join('/')}/` :
-    '';
+  let handler = '';
+
+  if(typeof event.session === 'object') {
+    if(typeof event.session.attributes === 'object') {
+      handler = typeof event.session.attributes.__intents__ === 'object' ?
+      `${event.session.attributes.__intents__.join('/')}/` :
+      '';
+    }
+  }
 
   handler += event.request.intent.name;
   event.handler = handler;
