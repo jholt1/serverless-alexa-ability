@@ -31,7 +31,10 @@ const intent = (event) => {
     }
   }
 
-  handler += event.request.intent.name;
+  if (event.request.intent) {
+    handler += event.request.intent.name;
+  }
+
   event.handler = handler;
 
   return event;
