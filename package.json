@@ -7,10 +7,8 @@
     "babel-node": "babel-node",
     "build": "babel src -d build",
     "test": "jest",
-    "coverage": "jest --coverage",
-    "precommit-msg": "echo 'building...' && exit 0"
+    "coverage": "jest --coverage"
   },
-  "pre-commit": [ "precommit-msg", "build" ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jholt1/serverless-alexa-ability.git"
@@ -40,7 +38,6 @@
     "babel-preset-es2017": "^6.22.0",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
-    "jest": "^19.0.2",
-    "pre-commit": "^1.2.2"
+    "jest": "^19.0.2"
   }
 }
