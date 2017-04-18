@@ -31,7 +31,7 @@ var output = function output(type, message) {
 };
 
 var attributes = function attributes(event) {
-  var attr = event.session.attributes;
+  var attr = event.session.attributes || {};
   var intents = (0, _lodash.clone)((0, _lodash.get)(attr, '__intents__', []));
 
   intents.push(event.request.intent.name);
@@ -41,7 +41,13 @@ var attributes = function attributes(event) {
 };
 
 var intent = function intent(event) {
-  var handler = _typeof(event.session.attributes.__intents__) === 'object' ? event.session.attributes.__intents__.join('/') + '/' : '';
+  var handler = '';
+
+  if (_typeof(event.session) === 'object') {
+    if (_typeof(event.session.attributes) === 'object') {
+      handler = _typeof(event.session.attributes.__intents__) === 'object' ? event.session.attributes.__intents__.join('/') + '/' : '';
+    }
+  }
 
   handler += event.request.intent.name;
   event.handler = handler;
