@@ -11,7 +11,7 @@ const output = (type, message) => {
 };
 
 const attributes = (event) => {
-  let attr = event.session.attributes;
+  let attr = event.session.attributes || {};
   let intents = clone(get(attr, '__intents__', []));
 
   intents.push(event.request.intent.name);
