@@ -45,7 +45,10 @@ const intent = (event) => {
 
   if (event.request.intent) {
     handler += event.request.intent.name;
+  } else {
+    handler += event.request.type;
   }
+
 
   event.handler = handler;
 
@@ -82,6 +85,7 @@ export class Ability {
 
   async on(intent, func) {
     if (intent === this.ev.handler) {
+      this.sent = true;
       this.insights('pageview', intent);
 
       await func(this);
@@ -184,7 +188,9 @@ export class Ability {
   }
 
   error(func) {
-    func();
+    if (!this.sent) {
+      func();
+    }
     return this;
   }
 }

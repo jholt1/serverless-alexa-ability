@@ -61,6 +61,8 @@ var intent = function intent(event) {
 
   if (event.request.intent) {
     handler += event.request.intent.name;
+  } else {
+    handler += event.request.type;
   }
 
   event.handler = handler;
@@ -107,19 +109,20 @@ var Ability = exports.Ability = function () {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!(intent === this.ev.handler)) {
-                  _context.next = 4;
+                  _context.next = 5;
                   break;
                 }
 
+                this.sent = true;
                 this.insights('pageview', intent);
 
-                _context.next = 4;
+                _context.next = 5;
                 return func(this);
 
-              case 4:
+              case 5:
                 return _context.abrupt('return', this);
 
-              case 5:
+              case 6:
               case 'end':
                 return _context.stop();
             }
@@ -245,7 +248,9 @@ var Ability = exports.Ability = function () {
   }, {
     key: 'error',
     value: function error(func) {
-      func();
+      if (!this.sent) {
+        func();
+      }
       return this;
     }
   }]);
