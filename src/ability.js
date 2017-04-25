@@ -85,7 +85,9 @@ export class Ability {
   }
 
   async on(intent, func) {
+    console.log('intent', intent);
     if (intent === this.ev.handler) {
+      console.log(intent, this.ev.handler);
       this.sent = true;
       this.insights('pageview', intent);
 

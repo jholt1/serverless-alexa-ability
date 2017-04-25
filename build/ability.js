@@ -109,21 +109,24 @@ var Ability = exports.Ability = function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                console.log('intent', intent);
+
                 if (!(intent === this.ev.handler)) {
-                  _context.next = 5;
+                  _context.next = 7;
                   break;
                 }
 
+                console.log(intent, this.ev.handler);
                 this.sent = true;
                 this.insights('pageview', intent);
 
-                _context.next = 5;
+                _context.next = 7;
                 return func(this);
 
-              case 5:
+              case 7:
                 return _context.abrupt('return', this);
 
-              case 6:
+              case 8:
               case 'end':
                 return _context.stop();
             }
