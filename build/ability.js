@@ -124,6 +124,7 @@ var Ability = exports.Ability = function () {
               case 5:
 
                 if (intent === this.ev.handler + '/AMAZON.StopIntent') {
+                  this.sent = true;
                   this.end();
                 }
 

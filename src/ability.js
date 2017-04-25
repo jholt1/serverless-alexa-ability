@@ -94,6 +94,7 @@ export class Ability {
     }
 
     if (intent === `${this.ev.handler}/AMAZON.StopIntent`) {
+      this.sent = true;
       this.end();
     }
 
