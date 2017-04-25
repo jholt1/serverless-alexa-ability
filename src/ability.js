@@ -14,7 +14,10 @@ const attributes = (event) => {
   let attr = event.session.attributes || {};
   let intents = clone(get(attr, '__intents__', []));
 
-  intents.push(event.request.intent.name);
+  if (event.request.intent) {
+    intents.push(event.request.intent.name);
+  }
+
   attr.__intents__ = intents;
 
   return attr;
@@ -23,11 +26,20 @@ const attributes = (event) => {
 const intent = (event) => {
   let handler = '';
 
-  if(typeof event.session === 'object') {
-    if(typeof event.session.attributes === 'object') {
-      handler = typeof event.session.attributes.__intents__ === 'object' ?
-      `${event.session.attributes.__intents__.join('/')}/` :
-      '';
+  if (
+    typeof event.session === 'object' &&
+    typeof event.session.attributes === 'object' &&
+    typeof event.session.attributes.__intents__ === 'object'
+  ) {
+    handler += `${event.session.attributes.__intents__.join('/')}/`;
+  } else {
+    if (!event.session) {
+      event.session = {};
+      event.session.attributes = {};
+    }
+
+    if (!event.session.attributes) {
+      event.session.attributes = {};
     }
   }
 
