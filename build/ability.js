@@ -87,6 +87,7 @@ var Ability = exports.Ability = function () {
       response: {}
     };
 
+    console.log(this.ev);
     // console.log('request', event.request);
     // console.log('event', event);
   }

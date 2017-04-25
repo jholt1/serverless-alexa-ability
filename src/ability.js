@@ -71,6 +71,7 @@ export class Ability {
       response: {}
     };
 
+    console.log(this.ev);
     // console.log('request', event.request);
     // console.log('event', event);
   }
