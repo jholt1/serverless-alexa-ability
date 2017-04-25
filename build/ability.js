@@ -110,20 +110,23 @@ var Ability = exports.Ability = function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                console.log(intent, this.ev.handler);
-
                 if (!(intent === this.ev.handler)) {
-                  _context.next = 6;
+                  _context.next = 5;
                   break;
                 }
 
                 this.sent = true;
                 this.insights('pageview', intent);
 
-                _context.next = 6;
+                _context.next = 5;
                 return func(this);
 
-              case 6:
+              case 5:
+
+                if (intent === this.ev.handler + '/AMAZON.StopIntent') {
+                  this.end();
+                }
+
                 return _context.abrupt('return', this);
 
               case 7:

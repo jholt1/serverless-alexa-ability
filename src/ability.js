@@ -86,12 +86,15 @@ export class Ability {
   }
 
   async on(intent, func) {
-    console.log(intent, this.ev.handler);
     if (intent === this.ev.handler) {
       this.sent = true;
       this.insights('pageview', intent);
 
       await func(this);
+    }
+
+    if (intent === `${this.ev.handler}/AMAZON.StopIntent`) {
+      this.end();
     }
 
     return this;
