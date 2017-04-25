@@ -111,7 +111,7 @@ var Ability = exports.Ability = function () {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!(intent === this.ev.handler)) {
-                  _context.next = 5;
+                  _context.next = 7;
                   break;
                 }
 
@@ -122,15 +122,21 @@ var Ability = exports.Ability = function () {
                 return func(this);
 
               case 5:
-
-                if (intent === this.ev.handler + '/AMAZON.StopIntent') {
-                  this.sent = true;
-                  this.end();
-                }
-
-                return _context.abrupt('return', this);
+                _context.next = 8;
+                break;
 
               case 7:
+                if (intent + '/AMAZON.StopIntent' === this.ev.handler) {
+                  console.log('stop intent');
+
+                  this.sent = true;
+                  this.say('goodbye').end();
+                }
+
+              case 8:
+                return _context.abrupt('return', this);
+
+              case 9:
               case 'end':
                 return _context.stop();
             }

@@ -91,11 +91,11 @@ export class Ability {
       this.insights('pageview', intent);
 
       await func(this);
-    }
+    } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler) {
+      console.log('stop intent');
 
-    if (intent === `${this.ev.handler}/AMAZON.StopIntent`) {
       this.sent = true;
-      this.end();
+      this.say('goodbye').end();
     }
 
     return this;
