@@ -60,6 +60,7 @@ export class Ability {
   constructor(event, callback, options) {
     this.ev = intent(event);
     this.call = callback;
+    this.sent = false;
 
     if(options && options.ga) {
       this.visitor = ua(options.ga);
@@ -85,8 +86,8 @@ export class Ability {
   }
 
   async on(intent, func) {
+    console.log(intent, this.ev.handler);
     if (intent === this.ev.handler) {
-      console.log(intent, this.ev.handler);
       this.sent = true;
       this.insights('pageview', intent);
 
@@ -193,6 +194,7 @@ export class Ability {
     if (!this.sent) {
       func();
     }
+
     return this;
   }
 }

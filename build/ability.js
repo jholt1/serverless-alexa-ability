@@ -76,6 +76,7 @@ var Ability = exports.Ability = function () {
 
     this.ev = intent(event);
     this.call = callback;
+    this.sent = false;
 
     if (options && options.ga) {
       this.visitor = (0, _universalAnalytics2.default)(options.ga);
@@ -109,12 +110,13 @@ var Ability = exports.Ability = function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                console.log(intent, this.ev.handler);
+
                 if (!(intent === this.ev.handler)) {
                   _context.next = 6;
                   break;
                 }
 
-                console.log(intent, this.ev.handler);
                 this.sent = true;
                 this.insights('pageview', intent);
 
@@ -253,6 +255,7 @@ var Ability = exports.Ability = function () {
       if (!this.sent) {
         func();
       }
+
       return this;
     }
   }]);
