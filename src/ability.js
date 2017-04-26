@@ -1,4 +1,4 @@
-import { get, clone } from 'lodash';
+import { get, clone, transform } from 'lodash';
 import ua from 'universal-analytics';
 
 const output = (type, message) => {
@@ -62,6 +62,12 @@ export class Ability {
     this.call = callback;
     this.sent = false;
 
+    this.sl = transform(
+      get(this.ev, 'request.intent.slots'),
+      (obj, slot) => { obj[slot.name] = slot.value; },
+      {}
+    );
+
     if(options && options.ga) {
       this.visitor = ua(options.ga);
       this.visitor.set('uid', this.ev.session.user.userId);
@@ -92,10 +98,9 @@ export class Ability {
 
       await func(this);
     } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler) {
-      console.log('stop intent');
 
       this.sent = true;
-      this.say('goodbye').end();
+      this.end();
     }
 
     return this;
@@ -113,6 +118,10 @@ export class Ability {
 
   event() {
     return this.ev;
+  }
+
+  slot() {
+    return this.sl;
   }
 
   callback(...argument) {

@@ -78,6 +78,10 @@ var Ability = exports.Ability = function () {
     this.call = callback;
     this.sent = false;
 
+    this.sl = (0, _lodash.transform)((0, _lodash.get)(this.ev, 'request.intent.slots'), function (obj, slot) {
+      obj[slot.name] = slot.value;
+    }, {});
+
     if (options && options.ga) {
       this.visitor = (0, _universalAnalytics2.default)(options.ga);
       this.visitor.set('uid', this.ev.session.user.userId);
@@ -127,10 +131,9 @@ var Ability = exports.Ability = function () {
 
               case 7:
                 if (intent + '/AMAZON.StopIntent' === this.ev.handler) {
-                  console.log('stop intent');
 
                   this.sent = true;
-                  this.say('goodbye').end();
+                  this.end();
                 }
 
               case 8:
@@ -167,6 +170,11 @@ var Ability = exports.Ability = function () {
     key: 'event',
     value: function event() {
       return this.ev;
+    }
+  }, {
+    key: 'slot',
+    value: function slot() {
+      return this.sl;
     }
   }, {
     key: 'callback',
