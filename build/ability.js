@@ -172,8 +172,8 @@ var Ability = exports.Ability = function () {
       return this.ev;
     }
   }, {
-    key: 'slot',
-    value: function slot() {
+    key: 'slots',
+    value: function slots() {
       return this.sl;
     }
   }, {

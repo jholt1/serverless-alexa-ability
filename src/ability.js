@@ -120,7 +120,7 @@ export class Ability {
     return this.ev;
   }
 
-  slot() {
+  slots() {
     return this.sl;
   }
 
