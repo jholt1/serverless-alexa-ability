@@ -198,10 +198,6 @@ export class Ability {
     return this;
   }
 
-  slots() {
-    return this.ev.request.intent.slots;
-  }
-
   error(func) {
     if (!this.sent) {
       func();
