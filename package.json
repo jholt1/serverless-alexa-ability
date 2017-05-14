@@ -1,12 +1,12 @@
 {
   "name": "serverless-alexa-ability",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Alexa framework for serverless lambda",
   "main": "build/index.js",
   "scripts": {
     "babel-node": "babel-node",
     "build": "babel src -d build",
-    "prepublish": "npm run build",
+    "publish": "npm run build",
     "test": "jest",
     "coverage": "jest --coverage"
   },
