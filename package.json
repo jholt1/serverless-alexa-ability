@@ -6,7 +6,7 @@
   "scripts": {
     "babel-node": "babel-node",
     "build": "babel src -d build",
-    "prepublishOnly": "npm run build",
+    "prepublish": "npm run build",
     "test": "jest",
     "coverage": "jest --coverage"
   },
