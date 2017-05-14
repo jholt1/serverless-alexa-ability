@@ -77,10 +77,6 @@ export class Ability {
       version: '1.0',
       response: {}
     };
-
-    console.log(this.ev);
-    // console.log('request', event.request);
-    // console.log('event', event);
   }
 
   insights(type, data) {
@@ -98,7 +94,6 @@ export class Ability {
 
       await func(this);
     } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler) {
-
       this.sent = true;
       this.end();
     }
@@ -201,6 +196,10 @@ export class Ability {
     this.reprompt('ssml', message);
 
     return this;
+  }
+
+  slots() {
+    return this.ev.request.intent.slots;
   }
 
   error(func) {
