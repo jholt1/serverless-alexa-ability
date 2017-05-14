@@ -1,4 +1,5 @@
-import { get, clone } from 'lodash';
+import { get, clone, transform } from 'lodash';
+import ua from 'universal-analytics';
 
 const output = (type, message) => {
   let obj = {};
@@ -10,21 +11,45 @@ const output = (type, message) => {
 };
 
 const attributes = (event) => {
-  let attr = event.session.attributes;
+  let attr = event.session.attributes || {};
   let intents = clone(get(attr, '__intents__', []));
 
-  intents.push(event.request.intent.name);
+  if (event.request.intent) {
+    intents.push(event.request.intent.name);
+  }
+
   attr.__intents__ = intents;
 
   return attr;
 };
 
 const intent = (event) => {
-  let handler = typeof event.session.attributes.__intents__ === 'object' ?
-    `${event.session.attributes.__intents__.join('/')}/` :
-    '';
+  let handler = '';
 
-  handler += event.request.intent.name;
+  if (
+    typeof event.session === 'object' &&
+    typeof event.session.attributes === 'object' &&
+    typeof event.session.attributes.__intents__ === 'object'
+  ) {
+    handler += `${event.session.attributes.__intents__.join('/')}/`;
+  } else {
+    if (!event.session) {
+      event.session = {};
+      event.session.attributes = {};
+    }
+
+    if (!event.session.attributes) {
+      event.session.attributes = {};
+    }
+  }
+
+  if (event.request.intent) {
+    handler += event.request.intent.name;
+  } else {
+    handler += event.request.type;
+  }
+
+
   event.handler = handler;
 
   return event;
@@ -32,22 +57,45 @@ const intent = (event) => {
 
 export class Ability {
 
-  constructor(event, callback) {
+  constructor(event, callback, options) {
     this.ev = intent(event);
     this.call = callback;
+    this.sent = false;
+
+    this.sl = transform(
+      get(this.ev, 'request.intent.slots'),
+      (obj, slot) => { obj[slot.name] = slot.value; },
+      {}
+    );
+
+    if(options && options.ga) {
+      this.visitor = ua(options.ga);
+      this.visitor.set('uid', this.ev.session.user.userId);
+    }
 
     this.output = {
       version: '1.0',
       response: {}
     };
+  }
 
-    // console.log('request', event.request);
-    // console.log('event', event);
+  insights(type, data) {
+    if (this.visitor) {
+      this.visitor[type](data).send();
+    }
+
+    return this;
   }
 
   async on(intent, func) {
     if (intent === this.ev.handler) {
+      this.sent = true;
+      this.insights('pageview', intent);
+
       await func(this);
+    } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler) {
+      this.sent = true;
+      this.end();
     }
 
     return this;
@@ -65,6 +113,10 @@ export class Ability {
 
   event() {
     return this.ev;
+  }
+
+  slots() {
+    return this.sl;
   }
 
   callback(...argument) {
@@ -100,6 +152,10 @@ export class Ability {
 
   say(message) {
     this.send('text', message);
+    this.insights('event', {
+      ec: 'say',
+      ea: message
+    });
 
     return this;
   }
@@ -142,8 +198,15 @@ export class Ability {
     return this;
   }
 
+  slots() {
+    return this.ev.request.intent.slots;
+  }
+
   error(func) {
-    func();
+    if (!this.sent) {
+      func();
+    }
+
     return this;
   }
 }
