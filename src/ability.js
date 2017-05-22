@@ -88,6 +88,9 @@ export class Ability {
   }
 
   async on(intent, func) {
+    intent = intent.replace('LaunchRequest/', '');
+    intent = intent.replace('AMAZON.HelpIntent/', '');
+
     if (intent === this.ev.handler) {
       this.sent = true;
       this.insights('pageview', intent);
