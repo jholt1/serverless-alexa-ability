@@ -54,6 +54,10 @@ const intent = (event) => {
     handler = handler.replace('AMAZON.HelpIntent/', '');
   }
 
+  if (handler.charAt(0) === '/') {
+    handler = handler.substr(1);
+  }
+
   event.handler = handler;
 
   return event;
