@@ -49,6 +49,10 @@ const intent = (event) => {
     handler += event.request.type;
   }
 
+  if (!handler === 'LaunchRequest' && !handler === 'AMAZON.HelpIntent') {
+    handler = handler.replace('LaunchRequest/', '');
+    handler = handler.replace('AMAZON.HelpIntent/', '');
+  }
 
   event.handler = handler;
 
