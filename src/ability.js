@@ -55,6 +55,7 @@ const intent = (event) => {
   }
 
   event.handler = handler;
+  console.log('handler', handler);
 
   return event;
 };
@@ -94,6 +95,8 @@ export class Ability {
   async on(intent, func) {
     intent = intent.replace('LaunchRequest/', '');
     intent = intent.replace('AMAZON.HelpIntent/', '');
+
+    console.log('on', intent, this.ev.handler);
 
     if (intent === this.ev.handler) {
       this.sent = true;
