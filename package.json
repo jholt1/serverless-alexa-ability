@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "babel-node": "babel-node",
-    "build": "babel src -d build",
+    "build": "./node_modules/.bin/babel src -d build",
     "install": "npm run -s build",
     "test": "jest",
     "coverage": "jest --coverage"
