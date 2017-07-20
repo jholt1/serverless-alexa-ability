@@ -109,9 +109,13 @@ export class Ability {
       this.end();
     } else if (`${intent}/AMAZON.RepeatIntent` === this.ev.handler)  {
       const event = this.event();
-      const last = event.session.attributes.lastMessage;
+      const attributes = event.session.attributes;
+      const last = attributes.lastMessage;
+      let __intents__ = attributes.__intents__;
 
       this.ev.handler = intent;
+      __intents__.splice(0, __intents__.length -1);
+      this.session({__intents__});
       this.sent = true;
       this[last.type](last.message).converse();
     }
