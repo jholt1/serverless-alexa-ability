@@ -112,6 +112,7 @@ export class Ability {
       const attributes = event.session.attributes;
       const last = attributes.lastMessage;
       let arr = this.ev.session.attributes.__intents__;
+      console.log(arr);
       arr.pop();
       this.ev.session.attributes.__intents__ = arr;
       this.sent = true;
