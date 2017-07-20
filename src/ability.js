@@ -114,7 +114,7 @@ export class Ability {
       let __intents__ = attributes.__intents__;
 
       this.ev.handler = intent;
-      __intents__.splice(0, __intents__.length -1);
+      __intents__.splice(__intents__.length -1, 1);
       this.session({__intents__});
       this.sent = true;
       this[last.type](last.message).converse();
