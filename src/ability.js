@@ -107,6 +107,12 @@ export class Ability {
     } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler || `${intent}/AMAZON.CancelIntent` === this.ev.handler) {
       this.sent = true;
       this.end();
+    } else if (`${intent}/AMAZON.RepeatIntent` === this.ev.handler)  {
+      const event = this.event();
+
+      this.ev.handler = intent;
+      this.sent = true;
+      this.say(event.session.attributes.lastMessage).converse();
     }
 
     return this;
@@ -162,6 +168,7 @@ export class Ability {
   }
 
   say(message) {
+    this.session({lastMessage: message});
     this.send('text', message);
     this.insights('event', {
       ec: 'say',
