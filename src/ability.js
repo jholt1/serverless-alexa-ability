@@ -109,10 +109,11 @@ export class Ability {
       this.end();
     } else if (`${intent}/AMAZON.RepeatIntent` === this.ev.handler)  {
       const event = this.event();
+      const last = event.session.attributes.lastMessage;
 
       this.ev.handler = intent;
       this.sent = true;
-      this.say(event.session.attributes.lastMessage).converse();
+      this[last.type](last.message).converse();
     }
 
     return this;
@@ -168,7 +169,12 @@ export class Ability {
   }
 
   say(message) {
-    this.session({lastMessage: message});
+    this.session({
+      lastMessage: {
+        type: 'say',
+        message
+      }
+    });
     this.send('text', message);
     this.insights('event', {
       ec: 'say',
@@ -179,7 +185,17 @@ export class Ability {
   }
 
   ssml(message) {
+    this.session({
+      lastMessage: {
+        type: 'ssml',
+        message
+      }
+    });
     this.send('ssml', message);
+    this.insights('event', {
+      ec: 'ssml',
+      ea: message
+    });
 
     return this;
   }

@@ -12,6 +12,7 @@ test('Intent test', () => {
     text: "whats my balance"
   };
   expected.sessionAttributes.__intents__ = ["GetBalance"];
+  expected.sessionAttributes.lastMessage = {type: 'say', message: 'whats my balance'};
 
   app.on('testa', () => {
     app.say('test a').end();

@@ -4,6 +4,7 @@ import { event, templateResponse } from './mock';
 test('LinkAccount test', () => {
   const cb = jest.fn();
   const app = new Ability(event, cb);
+  const message = 'Please login';
 
   var expected = templateResponse;
 
@@ -15,8 +16,9 @@ test('LinkAccount test', () => {
     type: 'LinkAccount'
   };
   expected.sessionAttributes.__intents__ = ["GetBalance"];
+  expected.sessionAttributes.lastMessage = {type: 'say', message};
 
-  app.say('Please login').linkAccount().end();
+  app.say(message).linkAccount().end();
 
   expect(app.output).toEqual(expected);
 });

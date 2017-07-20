@@ -14,6 +14,7 @@ test('Create session test', () => {
   };
   expected.sessionAttributes.__intents__ = ["GetBalance"];
   expected.sessionAttributes.foo = 'bar';
+  expected.sessionAttributes.lastMessage = {type: 'say', message: 'whats my balance'};
 
   app.session({foo: 'bar'});
 

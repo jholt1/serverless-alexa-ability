@@ -13,6 +13,8 @@ test('Say end test', () => {
   };
   // expected.response.shouldEndSession = false;
   expected.sessionAttributes.__intents__ = ["GetBalance"];
+  expected.sessionAttributes.lastMessage = {type: 'say', message: 'whats my balance'};
+
 
   app.say('whats my balance').end();
 
@@ -35,6 +37,7 @@ test('Say end with card test', () => {
     content: 'World'
   };
   expected.sessionAttributes.__intents__ = ["GetBalance", "GetBalance"];
+  expected.sessionAttributes.lastMessage = {type: 'say', message: 'whats my balance'};
 
   app.say('whats my balance').card({
     type: 'Simple',

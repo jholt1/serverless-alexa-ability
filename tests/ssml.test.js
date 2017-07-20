@@ -12,6 +12,7 @@ test('Ssml end test', () => {
     ssml: "<speak>whats my balance</speak>"
   };
   expected.sessionAttributes.__intents__ = ["GetBalance"];
+  expected.sessionAttributes.lastMessage = {type: 'ssml', message: '<speak>whats my balance</speak>'};
 
   app.ssml('<speak>whats my balance</speak>').end();
 
@@ -34,6 +35,7 @@ test('Ssml end with card test', () => {
     content: 'World'
   };
   expected.sessionAttributes.__intents__ = ["GetBalance", "GetBalance"];
+  expected.sessionAttributes.lastMessage = {type: 'ssml', message: '<speak>whats my balance</speak>'};
 
   app.ssml('<speak>whats my balance</speak>').card({
     type: 'Simple',

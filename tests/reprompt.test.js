@@ -4,6 +4,7 @@ import { event, templateResponse } from './mock';
 test('Say end with reprompt test', () => {
   const cb = jest.fn();
   const app = new Ability(event, cb);
+  const message = 'whats my balance';
 
   var expected = templateResponse;
 
@@ -18,8 +19,9 @@ test('Say end with reprompt test', () => {
     }
   };
   expected.sessionAttributes.__intents__ = ["GetBalance"];
+  expected.sessionAttributes.lastMessage = {type: 'say', message};
 
-  app.say('whats my balance').repromptSay('Do you want to know your balance?').end();
+  app.say(message).repromptSay('Do you want to know your balance?').end();
 
   expect(app.output).toEqual(expected);
 });
