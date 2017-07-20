@@ -111,8 +111,9 @@ export class Ability {
       const event = this.event();
       const attributes = event.session.attributes;
       const last = attributes.lastMessage;
-
-      this.ev.session.attributes.__intents__.pop();
+      let arr = this.ev.session.attributes.__intents__;
+      arr.pop();
+      this.ev.session.attributes.__intents__ = arr;
       this.sent = true;
       this[last.type](last.message).converse();
     }
