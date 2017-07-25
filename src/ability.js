@@ -100,14 +100,17 @@ export class Ability {
     intent = intent.replace('AMAZON.HelpIntent/', '');
 
     if (intent === this.ev.handler) {
+      console.log('intent');
       this.sent = true;
       this.insights('pageview', this.ev.handler);
 
       await func(this);
     } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler || `${intent}/AMAZON.CancelIntent` === this.ev.handler) {
+      console.log('stop');
       this.sent = true;
       this.end();
     } else if (`${intent}/AMAZON.RepeatIntent` === this.ev.handler)  {
+      console.log('repeat');
       const event = this.event();
       const attributes = event.session.attributes;
       const last = attributes.lastMessage;
