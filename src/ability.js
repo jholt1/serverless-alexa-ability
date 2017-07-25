@@ -107,7 +107,7 @@ export class Ability {
     } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler || `${intent}/AMAZON.CancelIntent` === this.ev.handler) {
       this.sent = true;
       this.end();
-    } else if (`${intent}/AMAZON.RepeatIntent` === this.ev.handler)  {
+    } else if (`${intent}/AMAZON.RepeatIntent` === this.ev.handler || '/AMAZON.RepeatIntent' === this.ev.handler)  {
       const event = this.event();
       const attributes = event.session.attributes;
       const last = attributes.lastMessage;
@@ -115,8 +115,14 @@ export class Ability {
       this.sent = true;
       this.insights('pageview', this.ev.handler);
       this.ev.handler = this.ev.handler.replace('/AMAZON.RepeatIntent', '');
-      this[last.type](last.message);
-      this.create(false);
+
+      if (last) {
+        this[last.type](last.message);
+        this.create(false);
+      } else {
+        this.end();
+      }
+
     }
 
     return this;
