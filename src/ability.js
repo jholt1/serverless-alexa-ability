@@ -101,7 +101,7 @@ export class Ability {
 
     if (intent === this.ev.handler) {
       this.sent = true;
-      this.insights('pageview', intent);
+      this.insights('pageview', this.ev.handler);
 
       await func(this);
     } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler || `${intent}/AMAZON.CancelIntent` === this.ev.handler) {
@@ -113,7 +113,7 @@ export class Ability {
       const last = attributes.lastMessage;
 
       this.sent = true;
-      this.insights('pageview', intent);
+      this.insights('pageview', this.ev.handler);
       this[last.type](last.message).converse();
     }
 
