@@ -113,6 +113,7 @@ export class Ability {
       const last = attributes.lastMessage;
 
       this.sent = true;
+      this.insights('pageview', intent);
       this[last.type](last.message).converse();
     }
 
