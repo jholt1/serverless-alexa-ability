@@ -104,7 +104,7 @@ export class Ability {
       this.insights('pageview', this.ev.handler);
 
       await func(this);
-    } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler || `${intent}/AMAZON.CancelIntent` === this.ev.handler) {
+    } else if (this.ev.handler.includes('AMAZON.StopIntent') || this.ev.handler.includes('AMAZON.CancelIntent')) {
       this.sent = true;
       this.end();
     } else if (this.ev.handler.includes('AMAZON.RepeatIntent'))  {
