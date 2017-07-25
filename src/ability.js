@@ -49,11 +49,6 @@ const intent = (event) => {
     handler += event.request.type;
   }
 
-  if (!handler === 'LaunchRequest' && !handler === 'AMAZON.HelpIntent') {
-    handler = handler.replace('LaunchRequest/', '');
-    handler = handler.replace('AMAZON.HelpIntent/', '');
-  }
-
   if (handler.charAt(0) === '/') {
     handler = handler.substr(1);
   }
@@ -100,6 +95,11 @@ export class Ability {
     intent = intent.replace('AMAZON.HelpIntent/', '');
 
     this.ev.handler = this.ev.handler.replace(/AMAZON.RepeatIntent\//g, '');
+
+    if (this.ev.handler !== 'LaunchRequest' && this.ev.handler !== 'AMAZON.HelpIntent') {
+      this.ev.handler = this.ev.handler.replace('LaunchRequest/', '');
+      this.ev.handler = this.ev.handler.replace('AMAZON.HelpIntent/', '');
+    }
 
     if (intent === this.ev.handler) {
       this.sent = true;
