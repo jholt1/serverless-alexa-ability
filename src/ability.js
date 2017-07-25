@@ -91,8 +91,6 @@ export class Ability {
   }
 
   async on(intent, func) {
-    intent = intent.replace('LaunchRequest/', '');
-    intent = intent.replace('AMAZON.HelpIntent/', '');
 
     this.ev.handler = this.ev.handler.replace(/AMAZON.RepeatIntent\//g, '');
 
