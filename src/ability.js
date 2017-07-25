@@ -240,6 +240,7 @@ export class Ability {
   }
 
   error(func) {
+    console.log('error: ', this.ev.handler);
     if (!this.sent) {
       func();
     }
