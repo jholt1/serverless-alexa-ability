@@ -111,6 +111,7 @@ export class Ability {
       const event = this.event();
       const attributes = event.session.attributes;
       const last = attributes.lastMessage;
+      console.log(last);
 
       this.sent = true;
       this.insights('pageview', this.ev.handler);
