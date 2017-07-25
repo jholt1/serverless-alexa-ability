@@ -102,21 +102,17 @@ export class Ability {
     this.ev.handler = this.ev.handler.replace(/AMAZON.RepeatIntent\//g, '');
 
     if (intent === this.ev.handler) {
-      console.log('intent');
       this.sent = true;
       this.insights('pageview', this.ev.handler);
 
       await func(this);
     } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler || `${intent}/AMAZON.CancelIntent` === this.ev.handler) {
-      console.log('stop');
       this.sent = true;
       this.end();
     } else if (`${intent}/AMAZON.RepeatIntent` === this.ev.handler)  {
-      console.log('repeat');
       const event = this.event();
       const attributes = event.session.attributes;
       const last = attributes.lastMessage;
-      console.log(last);
 
       this.sent = true;
       this.insights('pageview', this.ev.handler);
@@ -243,6 +239,7 @@ export class Ability {
 
   error(func) {
     if (!this.sent) {
+      this.insights('pageview', this.ev.handler);
       func();
     }
 
