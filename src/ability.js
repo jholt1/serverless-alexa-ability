@@ -115,7 +115,8 @@ export class Ability {
 
       this.sent = true;
       this.insights('pageview', this.ev.handler);
-      this[last.type](last.message).converse();
+      this[last.type](last.message);
+      this.create(false);
     }
 
     this.ev.handler = this.ev.handler.replace('/AMAZON.RepeatIntent', '');
