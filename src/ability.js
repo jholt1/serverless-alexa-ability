@@ -122,7 +122,7 @@ export class Ability {
       this.create(false);
     }
 
-    this.ev.handler = this.ev.handler.replace('/AMAZON.RepeatIntent', '');
+    // this.ev.handler = this.ev.handler.replace('/AMAZON.RepeatIntent', '');
 
     return this;
   }
