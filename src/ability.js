@@ -99,6 +99,8 @@ export class Ability {
     intent = intent.replace('LaunchRequest/', '');
     intent = intent.replace('AMAZON.HelpIntent/', '');
 
+    this.ev.handler = this.ev.handler.replace(/AMAZON.RepeatIntent/\/g, '');
+
     if (intent === this.ev.handler) {
       console.log('intent');
       this.sent = true;
@@ -240,7 +242,6 @@ export class Ability {
   }
 
   error(func) {
-    console.log('error: ', this.ev.handler);
     if (!this.sent) {
       func();
     }
