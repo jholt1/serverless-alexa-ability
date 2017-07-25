@@ -107,7 +107,7 @@ export class Ability {
     } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler || `${intent}/AMAZON.CancelIntent` === this.ev.handler) {
       this.sent = true;
       this.end();
-    } else if (`${intent}/AMAZON.RepeatIntent` === this.ev.handler || '/AMAZON.RepeatIntent' === this.ev.handler)  {
+    } else if (this.ev.handler.includes('AMAZON.RepeatIntent')  {
       const event = this.event();
       const attributes = event.session.attributes;
       const last = attributes.lastMessage;
