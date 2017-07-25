@@ -99,7 +99,7 @@ export class Ability {
     intent = intent.replace('LaunchRequest/', '');
     intent = intent.replace('AMAZON.HelpIntent/', '');
 
-    this.ev.handler = this.ev.handler.replace(/AMAZON.RepeatIntent/\/g, '');
+    this.ev.handler = this.ev.handler.replace(/AMAZON.RepeatIntent//g, '');
 
     if (intent === this.ev.handler) {
       console.log('intent');
