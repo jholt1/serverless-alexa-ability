@@ -92,6 +92,7 @@ export class Ability {
 
   slotValue(slot){
     let value = slot.value;
+    console.log(JSON.stringify(slot));
     let resolution = (slot.resolutions && slot.resolutions.resolutionsPerAuthority && slot.resolutions.resolutionsPerAuthority.length > 0) ? slot.resolutions.resolutionsPerAuthority[0] : null;
     if(resolution && resolution.status.code == 'ER_SUCCESS_MATCH'){
         let resolutionValue = resolution.values[0].value;
