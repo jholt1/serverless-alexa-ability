@@ -67,7 +67,7 @@ export class Ability {
 
     this.sl = transform(
       get(this.ev, 'request.intent.slots'),
-      (obj, slot) => { obj[slot.name] = slot.value; },
+      (obj, slot) => { obj[slot.name] = this.slotValue(slot); },
       {}
     );
 
@@ -88,6 +88,16 @@ export class Ability {
     }
 
     return this;
+  }
+
+  slotValue(slot){
+    let value = slot.value;
+    let resolution = (slot.resolutions && slot.resolutions.resolutionsPerAuthority && slot.resolutions.resolutionsPerAuthority.length > 0) ? slot.resolutions.resolutionsPerAuthority[0] : null;
+    if(resolution && resolution.status.code == 'ER_SUCCESS_MATCH'){
+        let resolutionValue = resolution.values[0].value;
+        value = resolutionValue.id ? resolutionValue.id : resolutionValue.name;
+    }
+    return value;
   }
 
   async on(intent, func) {
