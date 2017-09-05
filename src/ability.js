@@ -177,10 +177,10 @@ export class Ability {
   }
   
   reverse() {
-    let handler = this.ev.handler.split('/');
-    handler.pop();
+    // let handler = this.ev.handler.split('/');
+    // handler.pop();
     
-    this.event().handler = handler.toString().replace(',', '/');
+    // this.event().handler = handler.toString().replace(',', '/');
     
     this.ev.session.attributes.__intents__.pop();
     
