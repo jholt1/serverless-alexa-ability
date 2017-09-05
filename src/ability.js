@@ -163,8 +163,9 @@ export class Ability {
 
   create(end) {
     this.output.response.shouldEndSession = end;
-    console.log('the end', JSON.stringify(this.ev));
+    console.log('the end a', JSON.stringify(this.ev));
     this.output.sessionAttributes = attributes(this.ev);
+    console.log('the end b', JSON.stringify(this.ev));
 
     this.call(null, this.output);
 
