@@ -175,8 +175,22 @@ export class Ability {
 
     return this;
   }
+  
+  reverse() {
+    let handler = this.ev.handler.split('/');
+    handler.pop();
+    
+    this.ev.handler = handler.toString().replace(',', '/');
+    
+    return this;
+  }
 
-  converse() {
+  converse(type) {
+    
+    if (type === 'reverse') {
+      this.reverse();
+    }
+    
     this.create(false);
 
     return this;
