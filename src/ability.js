@@ -182,7 +182,7 @@ export class Ability {
     let handler = this.ev.handler.split('/');
     handler.pop();
     console.log('REVERSE a', JSON.stringify(this.ev));
-    // this.ev.session.attributes.__intents__.pop();
+    delete this.ev.request.intent;
     this.ev.handler = handler.toString().replace(',', '/');
     console.log('REVERSE b', JSON.stringify(this.ev));
     
