@@ -179,9 +179,9 @@ export class Ability {
   reverse() {
     let handler = this.ev.handler.split('/');
     handler.pop();
-    
+    console.log('REVERSE a', JSON.stringify(this.ev));
     this.ev.handler = handler.toString().replace(',', '/');
-    console.log('REVERSE', JSON.stringify(this.ev));
+    console.log('REVERSE b', JSON.stringify(this.ev));
     
     return this;
   }
