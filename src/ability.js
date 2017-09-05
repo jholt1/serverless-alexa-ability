@@ -181,8 +181,10 @@ export class Ability {
     // handler.pop();
     
     // this.event().handler = handler.toString().replace(',', '/');
-    
+    console.log('REVERSE');
+    console.log('a', this.ev.session.attributes.__intents__);
     this.ev.session.attributes.__intents__.pop();
+    console.log('b', this.ev.session.attributes.__intents__);
     
     return this;
   }
