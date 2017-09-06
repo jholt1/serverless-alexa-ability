@@ -163,9 +163,7 @@ export class Ability {
 
   create(end) {
     this.output.response.shouldEndSession = end;
-    console.log('the end a', JSON.stringify(this.ev));
     this.output.sessionAttributes = attributes(this.ev);
-    console.log('the end b', JSON.stringify(this.ev));
 
     this.call(null, this.output);
 
@@ -181,10 +179,8 @@ export class Ability {
   reverse() {
     let handler = this.ev.handler.split('/');
     handler.pop();
-    console.log('REVERSE a', JSON.stringify(this.ev));
     delete this.ev.request.intent;
     this.ev.handler = handler.toString().replace(',', '/');
-    console.log('REVERSE b', JSON.stringify(this.ev));
     
     return this;
   }
