@@ -49,11 +49,6 @@ const intent = (event) => {
     handler += event.request.type;
   }
 
-  if (!handler === 'LaunchRequest' && !handler === 'AMAZON.HelpIntent') {
-    handler = handler.replace('LaunchRequest/', '');
-    handler = handler.replace('AMAZON.HelpIntent/', '');
-  }
-
   if (handler.charAt(0) === '/') {
     handler = handler.substr(1);
   }
@@ -72,7 +67,7 @@ export class Ability {
 
     this.sl = transform(
       get(this.ev, 'request.intent.slots'),
-      (obj, slot) => { obj[slot.name] = slot.value; },
+      (obj, slot) => { obj[slot.name] = this.slotValue(slot); },
       {}
     );
 
@@ -95,29 +90,50 @@ export class Ability {
     return this;
   }
 
+  slotValue(slot){
+    let value = slot.value;
+    console.log(JSON.stringify(slot));
+    let resolution = (slot.resolutions && slot.resolutions.resolutionsPerAuthority && slot.resolutions.resolutionsPerAuthority.length > 0) ? slot.resolutions.resolutionsPerAuthority[0] : null;
+    if(resolution && resolution.status.code == 'ER_SUCCESS_MATCH'){
+        let resolutionValue = resolution.values[0].value;
+        value = resolutionValue.id ? resolutionValue.id : resolutionValue.name;
+    }
+    return value;
+  }
+
   async on(intent, func) {
-    intent = intent.replace('LaunchRequest/', '');
-    intent = intent.replace('AMAZON.HelpIntent/', '');
+
+    this.ev.handler = this.ev.handler.replace(/AMAZON.RepeatIntent\//g, '');
+
+    if (this.ev.handler !== 'LaunchRequest' && this.ev.handler !== 'AMAZON.HelpIntent') {
+      this.ev.handler = this.ev.handler.replace('LaunchRequest/', '');
+      this.ev.handler = this.ev.handler.replace('AMAZON.HelpIntent/', '');
+    }
 
     if (intent === this.ev.handler) {
       this.sent = true;
-      this.insights('pageview', intent);
+      this.insights('pageview', this.ev.handler);
 
       await func(this);
-    } else if (`${intent}/AMAZON.StopIntent` === this.ev.handler || `${intent}/AMAZON.CancelIntent` === this.ev.handler) {
+    } else if (this.ev.handler.includes('AMAZON.StopIntent') || this.ev.handler.includes('AMAZON.CancelIntent')) {
       this.sent = true;
       this.end();
-    } else if (`${intent}/AMAZON.RepeatIntent` === this.ev.handler)  {
+    } else if (this.ev.handler.includes('AMAZON.RepeatIntent'))  {
       const event = this.event();
       const attributes = event.session.attributes;
       const last = attributes.lastMessage;
-      let __intents__ = attributes.__intents__;
 
-      this.ev.handler = intent;
-      __intents__.shift();
-      this.session({__intents__});
       this.sent = true;
-      this[last.type](last.message).converse();
+      this.insights('pageview', this.ev.handler);
+      this.ev.handler = this.ev.handler.replace('/AMAZON.RepeatIntent', '');
+
+      if (last) {
+        this[last.type](last.message);
+        this.create(false);
+      } else {
+        this.end();
+      }
+
     }
 
     return this;
@@ -159,8 +175,22 @@ export class Ability {
 
     return this;
   }
+  
+  reverse() {
+    let handler = this.ev.handler.split('/');
+    handler.pop();
+    delete this.ev.request.intent;
+    this.ev.handler = handler.toString().replace(',', '/');
+    
+    return this;
+  }
 
-  converse() {
+  converse(type) {
+    
+    if (type === 'reverse') {
+      this.reverse();
+    }
+    
     this.create(false);
 
     return this;
@@ -238,6 +268,7 @@ export class Ability {
 
   error(func) {
     if (!this.sent) {
+      this.insights('pageview', this.ev.handler);
       func();
     }
 
